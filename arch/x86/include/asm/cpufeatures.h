@@ -421,6 +421,10 @@
 #define X86_FEATURE_IBRS_EXIT_SET	(22*32+ 0) /* ""  Set IBRS on kernel exit */
 #define X86_FEATURE_IBRS_EXIT_SKIP	(22*32+ 1) /* ""  Skip SPEC_CTRL MSR write on exit */
 
+/* AMD-defined Extended Feature 2 EAX, CPUID level 0x80000021 (EAX), word 20 */
+#define X86_FEATURE_NO_NESTED_DATA_BP	(20*32+ 0) /* "" No Nested Data Breakpoints */
+#define X86_FEATURE_AUTOIBRS		(20*32+ 8) /* "" Automatic IBRS */
+
 /*
  * BUG word(s)
  */

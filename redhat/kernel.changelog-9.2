@@ -1,3 +1,243 @@
+* Fri Aug 25 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.30.1.el9_2]
+- sched/core: Add __always_inline to schedule_loop() (Crystal Wood) [2233928 2232098]
+- x86/sev: Do not try to parse for the CC blob on non-AMD hardware (Tao Liu) [2232700 2182562]
+- arm64: efi: Make efi_rt_lock a raw_spinlock (Mark Salter) [2213499 2188323] {CVE-2023-21102}
+- efi: rt-wrapper: Add missing include (Mark Salter) [2213499 2188323] {CVE-2023-21102}
+- arm64: efi: Execute runtime services from a dedicated stack (Mark Salter) [2213499 2188323] {CVE-2023-21102}
+- crypto: rng - Fix lock imbalance in crypto_del_rng (Herbert Xu) [2232213 2229643]
+- drm/ast: Fix ARM compatibility (Robert Foss) [2232302 2192980]
+- irqchip/gicv3: Workaround for NVIDIA erratum T241-FABRIC-4 (Mark Salter) [2231962 2179060]
+- genirq: GENERIC_IRQ_EFFECTIVE_AFF_MASK depends on SMP (Mark Salter) [2231962 2179060]
+- scsi: storvsc: Handle SRB status value 0x30 (Cathy Avery) [2231990 2224933]
+- scsi: storvsc: Fix handling of virtual Fibre Channel timeouts (Cathy Avery) [2230747 2228298]
+- dm cache policy smq: ensure IO doesn't prevent cleaner policy progress (Benjamin Marzinski) [2228481 2159623]
+- net/sched: cls_fw: Fix improper refcount update leads to use-after-free (Davide Caratti) [2225642 2225102] {CVE-2023-3776}
+- md: add error_handlers for raid0 and linear (Nigel Croxon) [2221170 2162219]
+Resolves: rhbz#2213499, rhbz#2221170, rhbz#2225642, rhbz#2228481, rhbz#2230747, rhbz#2231962, rhbz#2231990, rhbz#2232213, rhbz#2232302, rhbz#2232700, rhbz#2233928
+
+* Thu Aug 17 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.29.1.el9_2]
+- redhat: configs: Disable CONFIG_CRYPTO_STATS since performance issue for storage (Herbert Xu) [2231850 2227964]
+- i2c: tegra: Fix PEC support for SMBUS block read (Steve Best) [2230488 2214531]
+- i2c: tegra: Set ACPI node as primary fwnode (Steve Best) [2230483 2222101]
+- perf vendor events intel: Add Emerald Rapids (Michael Petlan) [2230175 2177180]
+- perf vendor events intel: Refresh sapphirerapids metrics and events (Michael Petlan) [2230175 2177180]
+- perf vendor events: Update Intel sapphirerapids (Michael Petlan) [2230175 2177180]
+- perf/x86/intel/cstate: Add Emerald Rapids (Michael Petlan) [2230175 2177180]
+- perf/x86/intel: Add Emerald Rapids (Michael Petlan) [2230175 2177180]
+- perf/x86/intel/uncore: Add Emerald Rapids (Michael Petlan) [2230175 2177180]
+- perf/x86/msr: Add Emerald Rapids (Michael Petlan) [2230175 2177180]
+- perf/x86/rapl: Add support for Intel Emerald Rapids (Michael Petlan) [2230175 2177180]
+- platform/x86: intel-uncore-freq: add Emerald Rapids support (Michael Petlan) [2230169 2156827]
+- netfilter: nf_tables: disallow rule addition to bound chain via NFTA_RULE_CHAIN_ID (Phil Sutter) [2228990 2225271] {CVE-2023-4147}
+- netfilter: nft_set_pipapo: fix improper element removal (Phil Sutter) [2227510 2225277] {CVE-2023-4004}
+Resolves: rhbz#2227510, rhbz#2228990, rhbz#2230169, rhbz#2230175, rhbz#2230483, rhbz#2230488, rhbz#2231850
+
+* Thu Aug 10 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.28.1.el9_2]
+- iavf: fix reset task race with iavf_remove() (Petr Oros) [2228156 2223599]
+- iavf: fix a deadlock caused by rtnl and driver's lock circular dependencies (Petr Oros) [2228156 2223599]
+- Revert "iavf: Do not restart Tx queues after reset task failure" (Petr Oros) [2228156 2223599]
+- Revert "iavf: Detach device during reset task" (Petr Oros) [2228156 2223599]
+- iavf: Wait for reset in callbacks which trigger it (Petr Oros) [2228156 2223599]
+- iavf: use internal state to free traffic IRQs (Petr Oros) [2228156 2223599]
+- iavf: Fix out-of-bounds when setting channels on remove (Petr Oros) [2228156 2223599]
+- iavf: Fix use-after-free in free_netdev (Petr Oros) [2228156 2223599]
+- iavf: make functions static where possible (Petr Oros) [2228156 2223599]
+- iavf: fix err handling for MAC replace (Petr Oros) [2228156 2223599]
+- iavf: remove some unused functions and pointless wrappers (Petr Oros) [2228156 2223599]
+- iavf: remove mask from iavf_irq_enable_queues() (Petr Oros) [2228156 2223599]
+- iavf: send VLAN offloading caps once after VFR (Petr Oros) [2228156 2223599]
+- i40e: Wait for pending VF reset in VF set callbacks (Ivan Vecera) [2228158 2215498]
+- i40e: Add helper for VF inited state check with timeout (Ivan Vecera) [2228158 2215498]
+- KEYS: use kfree_sensitive with key (Vladis Dronov) [2227768 2223719]
+- locking/rtmutex: Add a lockdep assert to catch potential nested blocking (Crystal Wood) [2225623 2218724]
+- locking/rtmutex: Avoid pointless blk_flush_plug() invocations (Crystal Wood) [2225623 2218724]
+- locking/rtmutex: Submit/resume work explicitly before/after blocking (Crystal Wood) [2225623 2218724]
+- sched/core: Provide sched_rtmutex() and expose sched work helpers (Crystal Wood) [2225623 2218724]
+- cpufreq: intel_pstate: Enable HWP IO boost for all servers (David Arcari) [2210270 2175626]
+Resolves: rhbz#2210270, rhbz#2225623, rhbz#2227768, rhbz#2228156, rhbz#2228158
+
+* Thu Aug 03 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.27.1.el9_2]
+- x86/cpu/amd: Add a Zenbleed fix (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/cpu/amd: Move the errata checking functionality up (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/core: Return an error only when necessary (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/AMD: Fix mixed steppings support (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/AMD: Add a @cpu parameter to the reloading functions (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/amd: Remove load_microcode_amd()'s bsp parameter (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/amd: Cache debug register values in percpu variables (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode: Adjust late loading result reporting message (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode: Check CPU capabilities after late microcode update correctly (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode: Add a parameter to microcode_check() to store CPU capabilities (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/AMD: Rename a couple of functions (Waiman Long) [2226821 2226822] {CVE-2023-20593}
+- x86/microcode/AMD: Track patch allocation size explicitly (David Arcari) [2226821 1971938]
+- x86/microcode: Print previous version of microcode after reload (David Arcari) [2226821 1971938]
+- x86/cpu: Load microcode during restore_processor_state() (David Arcari) [2226821 1971938]
+- x86/pm: Add enumeration check before spec MSRs save/restore setup (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- x86/tsx: Add a feature bit for TSX control MSR support (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- x86/cpu: Restore AMD's DE_CFG MSR after resume (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- x86/pm: Fix false positive kmemleak report in msr_build_context() (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- x86/speculation: Restore speculation related MSRs during S3 resume (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- x86/pm: Save the MSR validity status at context setup (Chris von Recklinghausen) [2226821 2181908] {CVE-2023-1637}
+- libceph: harden msgr2.1 frame segment length checks (Ilya Dryomov) [2227070 2222253]
+- seccomp: Move copy_seccomp() to no failure path. (Viktor Malik) [2226945 2218682]
+- bpf: Adjust insufficient default bpf_jit_limit (Viktor Malik) [2226945 2218682]
+- crypto: ccp: Get rid of __sev_platform_init_locked()'s local function pointer (Bandan Das) [2224587 2152249]
+- crypto: ccp - Name -1 return value as SEV_RET_NO_FW_CALL (Bandan Das) [2224587 2152249]
+- x86/sev: Change snp_guest_issue_request()'s fw_err argument (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Double-buffer messages (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Add throttling awareness (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Convert the sw_exit_info_2 checking to a switch-case (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Do some code style cleanups (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Carve out the request issuing logic into a helper (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Remove the disable_vmpck label in handle_guest_request() (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Simplify extended guest request handling (Bandan Das) [2224587 2152249]
+- virt/coco/sev-guest: Check SEV_SNP attribute at probe time (Bandan Das) [2224587 2152249]
+- virt/sev-guest: Return -EIO if certificate buffer is not large enough (Bandan Das) [2224587 2152249]
+- virt/sev-guest: Prevent IV reuse in the SNP guest driver (Bandan Das) [2224587 2152249]
+- x86/sev: Don't use cc_platform_has() for early SEV-SNP calls (Bandan Das) [2224587 2152249]
+Resolves: rhbz#2224587, rhbz#2226821, rhbz#2226945, rhbz#2227070
+
+* Thu Jul 27 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.26.1.el9_2]
+- net: openvswitch: fix upcall counter access before allocation (Eelco Chaudron) [2223310 2203263]
+- netfilter: nf_tables: prevent OOB access in nft_byteorder_eval (Florian Westphal) [2221727 2221047] {CVE-2023-35001}
+- netfilter: nf_tables: do not ignore genmask when looking up chain by id (Florian Westphal) [2221780 2221049] {CVE-2023-31248}
+- rtmutex: Ensure that the top waiter is always woken up (Joel Savitz) [2222121 2176147]
+- netfilter: nf_tables: unbind non-anonymous set if rule construction fails (Phil Sutter) [2216160 2213271] {CVE-2023-3390}
+- netfilter: nf_tables: add NFT_TRANS_PREPARE_ERROR to deal with bound set/chain (Phil Sutter) [2216160 2213271] {CVE-2023-3390}
+- netfilter: nf_tables: fix chain binding transaction logic (Phil Sutter) [2216160 2213271] {CVE-2023-3390 CVE-2023-3610}
+- netfilter: nf_tables: incorrect error path handling with NFT_MSG_NEWRULE (Phil Sutter) [2216160 2213271] {CVE-2023-3390}
+- netfilter: nf_tables: validate catch-all set elements (Florian Westphal) [2216160 2213271] {CVE-2023-3390}
+- thunderbolt: Increase DisplayPort Connection Manager handshake timeout (Desnes Nunes) [2219463 2168851]
+- thunderbolt: Increase timeout of DP OUT adapter handshake (Desnes Nunes) [2219463 2212495]
+- ASoC: Intel: sof_sdw: add quick for Dell SKU 0BDA (Jaroslav Kysela) [2218960 2217298]
+- ASoC: Intel: soc-acpi: add tables for Dell SKU 0B34 (Jaroslav Kysela) [2218960 2217298]
+- ASoC: Intel: sof-sdw: add Dell SKU 0B34 (Jaroslav Kysela) [2218960 2217298]
+- ASoC: Intel: soc-acpi: add table for RPL Dell SKU 0BDA (Jaroslav Kysela) [2218960 2217298]
+- ACPI: sleep: Avoid breaking S3 wakeup due to might_sleep() (Mark Langsdorf) [2218026 2215972]
+Resolves: rhbz#2216160, rhbz#2218026, rhbz#2218960, rhbz#2219463, rhbz#2221727, rhbz#2221780, rhbz#2222121, rhbz#2223310
+
+* Thu Jul 20 2023 Patrick Talbert <ptalbert@redhat.com> [5.14.0-284.25.1.el9_2]
+- x86/speculation: Allow enabling STIBP with legacy IBRS (Ricardo Robaina) [2215014 2187269] {CVE-2023-1998}
+- netfilter: nf_dup_netdev: add and use recursion counter (Eric Garver) [2221169 1724795]
+- netfilter: nf_dup_netdev: do not push mac header a second time (Eric Garver) [2221169 1724795]
+- netfilter: egress: silence egress hook lockdep splats (Eric Garver) [2221169 1724795]
+- netfilter: nft_fwd_netdev: Support egress hook (Eric Garver) [2221169 1724795]
+- netfilter: nft_meta: add NFT_META_IFTYPE (Eric Garver) [2221169 1724795]
+- KVM: x86: Allow APICv APIC ID inhibit to be cleared (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Track required APICv inhibits with variable, not callback (Maxim Levitsky) [2218871 2177720]
+- Revert "KVM: SVM: Do not throw warning when calling avic_vcpu_load on a running vcpu" (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Ignore writes to Remote Read Data on AVIC write traps (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Handle multiple logical targets in AVIC kick fastpath (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Require logical ID to be power-of-2 for AVIC entry (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Update svm->ldr_reg cache even if LDR is "bad" (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Always update local APIC on writes to logical dest register (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Inhibit AVIC if vCPUs are aliased in logical mode (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Inhibit APICv/AVIC if the optimized physical map is disabled (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Honor architectural behavior for aliased 8-bit APIC IDs (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Disable APIC logical map if vCPUs are aliased in logical mode (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Disable APIC logical map if logical ID covers multiple MDAs (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Skip redundant x2APIC logical mode optimized cluster setup (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Explicitly track all possibilities for APIC map's logical modes (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Explicitly skip optimized logical map setup if vCPU's LDR==0 (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Add helper to perform final AVIC "kick" of single vCPU (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Document that vCPU ID == APIC ID in AVIC kick fastpatch (Maxim Levitsky) [2218871 2177720]
+- Revert "KVM: SVM: Use target APIC ID to complete x2AVIC IRQs when possible" (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Fix x2APIC Logical ID calculation for avic_kick_target_vcpus_fast (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Compute dest based on sender's x2APIC status for AVIC kick (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Replace "avic_mode" enum with "x2avic_enabled" boolean (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Inhibit APIC memslot if x2APIC and AVIC are enabled (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Move APIC access page helper to common x86 code (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Handle APICv updates for APIC "mode" changes via request (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Don't put/load AVIC when setting virtual APIC mode (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Process ICR on AVIC IPI delivery failure due to invalid target (Maxim Levitsky) [2218871 2177720]
+- KVM: SVM: Flush the "current" TLB when activating AVIC (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Purge "highest ISR" cache when updating APICv state (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Blindly get current x2APIC reg value on "nodecode write" traps (Maxim Levitsky) [2218871 2177720]
+Resolves: rhbz#2215014, rhbz#2218871, rhbz#2221169
+
+* Thu Jul 13 2023 Patrick Talbert <ptalbert@redhat.com> [5.14.0-284.24.1.el9_2]
+- tracing/hwlat: Replace sched_setaffinity with set_cpus_allowed_ptr (Jerome Marchand) [2221157 2178234]
+- cifs: return a single-use cfid if we did not get a lease (Ronnie Sahlberg) [2221159 2175967]
+- cifs: Check the lease context if we actually got a lease (Ronnie Sahlberg) [2221159 2175967]
+- cifs: set rc to -ENOENT if we can not get a dentry for the cached dir (Ronnie Sahlberg) [2221159 2175967]
+- cifs: use LIST_HEAD() and list_move() to simplify code (Ronnie Sahlberg) [2221159 2175967]
+- ipvlan:Fix out-of-bounds caused by unclear skb->cb (Davide Caratti) [2219662 2218677] {CVE-2023-3090}
+- nvme: fix discard support without oncs (Ming Lei) [2192632 2174443]
+- nvme: fix handling single range discard request (Ming Lei) [2192632 2174443]
+- KVM: x86/mmu: Refresh CR0.WP prior to checking for emulated permission faults (Paolo Bonzini) [2218935 2210042]
+- KVM: x86: Add helpers to query individual CR0/CR4 bits (Paolo Bonzini) [2218935 2210042]
+- KVM: x86: Preserve TDP MMU roots until they are explicitly invalidated (Paolo Bonzini) [2218935 2210042]
+- KVM: x86/mmu: Replace open coded usage of tdp_mmu_page with is_tdp_mmu_page() (Paolo Bonzini) [2218935 2210042]
+- KVM: x86/mmu: fix some comment typos (Paolo Bonzini) [2218935 2210042]
+- KVM: x86/mmu: Move TDP MMU VM init/uninit behind tdp_mmu_enabled (Paolo Bonzini) [2218935 2210042]
+- KVM: x86/mmu: Change tdp_mmu to a read-only parameter (Paolo Bonzini) [2218935 2210042]
+- KVM: VMX: Make CR0.WP a guest owned bit (Paolo Bonzini) [2218935 2210042]
+- KVM: x86: Make use of kvm_read_cr*_bits() when testing bits (Paolo Bonzini) [2218935 2210042]
+- KVM: x86: Ignore CR0.WP toggles in non-paging mode (Paolo Bonzini) [2218935 2210042]
+- KVM: x86: Do not unload MMU roots when only toggling CR0.WP with TDP enabled (Paolo Bonzini) [2218935 2210042]
+- erspan: get the proto with the md version for collect_md (Xin Long) [2217493 2140037]
+- net/sched: flower: fix possible OOB write in fl_set_geneve_opt() (Davide Caratti) [2216991 2214029] {CVE-2023-35788}
+Resolves: rhbz#2192632, rhbz#2216991, rhbz#2217493, rhbz#2218935, rhbz#2219662, rhbz#2221157, rhbz#2221159
+
+* Wed Jul 05 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.23.1.el9_2]
+- KVM: x86: Don't inhibit APICv/AVIC if xAPIC ID mismatch is due to 32-bit ID (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: Don't inhibit APICv/AVIC on xAPIC ID "change" if APIC is disabled (Maxim Levitsky) [2218871 2177720]
+- KVM: x86: fix APICv/x2AVIC disabled when vm reboot by itself (Maxim Levitsky) [2218871 2177720]
+- locking/rwbase: Mitigate indefinite writer starvation (Eder Zulian) [2217939 2037670]
+- rbd: get snapshot context after exclusive lock is ensured to be held (Ilya Dryomov) [2216569 2212511]
+- rbd: move RBD_OBJ_FLAG_COPYUP_ENABLED flag setting (Ilya Dryomov) [2216569 2212511]
+Resolves: rhbz#2216569, rhbz#2217939, rhbz#2218871
+
+* Thu Jun 29 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.22.1.el9_2]
+- PCI: hv: Add a per-bus mutex state_lock (Vitaly Kuznetsov) [2217066 2182619]
+- Revert "PCI: hv: Fix a timing issue which causes kdump to fail occasionally" (Vitaly Kuznetsov) [2217066 2182619]
+- PCI: hv: Remove the useless hv_pcichild_state from struct hv_pci_dev (Vitaly Kuznetsov) [2217066 2182619]
+- PCI: hv: Fix a race condition in hv_irq_unmask() that can cause panic (Vitaly Kuznetsov) [2217066 2182619]
+- PCI: hv: Fix a race condition bug in hv_pci_query_relations() (Vitaly Kuznetsov) [2217066 2182619]
+- hwmon: (coretemp) avoid RDMSR interrupts to isolated CPUs (Marcelo Tosatti) [2215552 2182083]
+- prlimit: do_prlimit needs to have a speculation check (Alex Gladkov) [2215015 2196316] {CVE-2023-0458}
+- x86: don't use REP_GOOD or ERMS for small memory clearing (Myron Stowe) [2196230 2190487]
+- x86/cpufeatures: Add macros for Intel's new fast rep string features (Myron Stowe) [2196230 2190487]
+Resolves: rhbz#2196230, rhbz#2215015, rhbz#2215552, rhbz#2217066
+
+* Thu Jun 22 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.21.1.el9_2]
+- crypto: jitter - correct health test during initialization (Vladis Dronov) [2215080 2214271]
+- mm: avoid unnecessary page fault retires on shared memory types (Nico Pache) [2213894 2160210]
+- scsi: lpfc: Account for fabric domain ctlr device loss recovery (Dick Kennedy) [2213616 2213029]
+- scsi: lpfc: Clear NLP_IN_DEV_LOSS flag if already in rediscovery (Dick Kennedy) [2213616 2213029]
+- scsi: lpfc: Fix use-after-free rport memory access in lpfc_register_remote_port() (Dick Kennedy) [2213616 2213029]
+- scsi: lpfc: Fix crash involving race between FLOGI timeout and devloss handler (Paul Ely) [2213616 2165043]
+- powerpc/vdso: Fix incorrect CFI in gettimeofday.S (Mamatha Inamdar) [2210074 2203363]
+- powerpc/vdso: Move cvdso_call macro into gettimeofday.S (Mamatha Inamdar) [2210074 2203363]
+- powerpc/vdso: Remove cvdso_call_time macro (Mamatha Inamdar) [2210074 2203363]
+- powerpc/vdso: Merge vdso64 and vdso32 into a single directory (Mamatha Inamdar) [2210074 2203363]
+- powerpc/vdso: Rework VDSO32 makefile to add a prefix to object files (Mamatha Inamdar) [2210074 2203363]
+- powerpc/vdso: augment VDSO32 functions to support 64 bits build (Mamatha Inamdar) [2210074 2203363]
+- redhat: configs: enable CONFIG_DELL_WMI_PRIVACY (Foggy Liu) [2209808 2186163]
+Resolves: rhbz#2209808, rhbz#2210074, rhbz#2213616, rhbz#2213894, rhbz#2215080
+
+* Thu Jun 15 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.20.1.el9_2]
+- ice: make writes to /dev/gnssX synchronous (Michal Schmidt) [2213186 2175764]
+- KVM: x86/mmu: Fix race condition in direct_page_fault (Jon Maloy) [2213165 2179930] {CVE-2022-45869}
+- ALSA: hda: Add NVIDIA codec IDs a3 through a7 to patch table (Foggy Liu) [2211656 2209194]
+- locking/rwsem: Disable preemption in all down_write*() and up_write() code paths (Waiman Long) [2187507 2176147]
+- locking/rwsem: Disable preemption in all down_read*() and up_read() code paths (Waiman Long) [2187507 2176147]
+- locking/rwsem: Prevent non-first waiter from spinning in down_write() slowpath (Waiman Long) [2187507 2176147]
+- locking/rwsem: Allow slowpath writer to ignore handoff bit if not set by first waiter (Waiman Long) [2187507 2176147]
+- locking/rwsem: Always try to wake waiters in out_nolock path (Waiman Long) [2187507 2176147]
+- locking/rwsem: Conditionally wake waiters in reader/writer slowpaths (Waiman Long) [2187507 2176147]
+- locking/rwsem: No need to check for handoff bit if wait queue empty (Waiman Long) [2187507 2176147]
+- locking/rwsem: Make handoff bit handling more consistent (Waiman Long) [2187507 2176147]
+- Revert "locking/rwsem: Conditionally wake waiters in reader/writer slowpaths" (Waiman Long) [2187507 2176147]
+Resolves: rhbz#2187507, rhbz#2211656, rhbz#2213165, rhbz#2213186
+
+* Fri Jun 09 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.19.1.el9_2]
+- device-dax: Fix duplicate 'hmem' device registration (Jeff Moyer) [2212386 2207496]
+- redhat/genlog.py: add support to list/process zstream Jira tickets (Herton R. Krzesinski)
+- ice: Remove LAG+SRIOV mutual exclusion (Michal Schmidt) [2209284 2203243]
+- platform/x86: ISST: PUNIT device mapping with Sub-NUMA clustering (Prarit Bhargava) [2185605 2139964]
+- module: Don't wait for GOING modules (Mark Langsdorf) [2186562 2028238]
+Resolves: rhbz#2185605, rhbz#2186562, rhbz#2209284, rhbz#2212386
+
 * Wed May 31 2023 Herton R. Krzesinski <herton@redhat.com> [5.14.0-284.18.1.el9_2]
 - x86/i8259: Mark legacy PIC interrupts with IRQ_LEVEL (Baoquan He) [2210614 2116317]
 - bluetooth: Perform careful capability checks in hci_sock_ioctl() (Ricardo Robaina) [2196340 2196341] {CVE-2023-2002}

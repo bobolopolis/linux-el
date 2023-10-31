@@ -24,7 +24,7 @@
 void mark_hardware_unsupported(const char *msg)
 {
 	/* Print one single message */
-	pr_crit("Warning: %s - this hardware has not undergone testing by AlmaLinux and might not be certified. Please consult https://catalog.redhat.com for certified hardware.\n", msg);
+	pr_crit("Warning: %s - this hardware has not undergone testing by AlmaLinux and might not be certified.\n", msg);
 }
 EXPORT_SYMBOL(mark_hardware_unsupported);
 

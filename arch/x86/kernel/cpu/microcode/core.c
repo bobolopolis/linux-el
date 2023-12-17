@@ -55,7 +55,7 @@ LIST_HEAD(microcode_cache);
  * All non cpu-hotplug-callback call sites use:
  *
  * - microcode_mutex to synchronize with each other;
- * - get/put_online_cpus() to synchronize with
+ * - cpus_read_lock/unlock() to synchronize with
  *   the cpu-hotplug-callback call sites.
  *
  * We guarantee that only a single cpu is being
@@ -138,25 +138,6 @@ static bool __init check_loader_disabled_bsp(void)
 		*res = false;
 
 	return *res;
-}
-
-extern struct builtin_fw __start_builtin_fw[];
-extern struct builtin_fw __end_builtin_fw[];
-
-bool get_builtin_firmware(struct cpio_data *cd, const char *name)
-{
-#ifdef CONFIG_FW_LOADER
-	struct builtin_fw *b_fw;
-
-	for (b_fw = __start_builtin_fw; b_fw != __end_builtin_fw; b_fw++) {
-		if (!strcmp(name, b_fw->name)) {
-			cd->size = b_fw->size;
-			cd->data = b_fw->data;
-			return true;
-		}
-	}
-#endif
-	return false;
 }
 
 void __init load_ucode_bsp(void)
@@ -494,13 +475,10 @@ static ssize_t reload_store(struct device *dev,
 	ssize_t ret = 0;
 
 	ret = kstrtoul(buf, 0, &val);
-	if (ret)
-		return ret;
+	if (ret || val != 1)
+		return -EINVAL;
 
-	if (val != 1)
-		return size;
-
-	get_online_cpus();
+	cpus_read_lock();
 
 	ret = check_online_cpus();
 	if (ret)
@@ -515,7 +493,7 @@ static ssize_t reload_store(struct device *dev,
 	mutex_unlock(&microcode_mutex);
 
 put:
-	put_online_cpus();
+	cpus_read_unlock();
 
 	if (ret == 0)
 		ret = size;
@@ -536,7 +514,7 @@ static ssize_t version_show(struct device *dev,
 	return sprintf(buf, "0x%x\n", uci->cpu_sig.rev);
 }
 
-static ssize_t pf_show(struct device *dev,
+static ssize_t processor_flags_show(struct device *dev,
 			struct device_attribute *attr, char *buf)
 {
 	struct ucode_cpu_info *uci = ucode_cpu_info + dev->id;
@@ -544,8 +522,8 @@ static ssize_t pf_show(struct device *dev,
 	return sprintf(buf, "0x%x\n", uci->cpu_sig.pf);
 }
 
-static DEVICE_ATTR(version, 0444, version_show, NULL);
-static DEVICE_ATTR(processor_flags, 0444, pf_show, NULL);
+static DEVICE_ATTR_RO(version);
+static DEVICE_ATTR_RO(processor_flags);
 
 static struct attribute *mc_default_attrs[] = {
 	&dev_attr_version.attr,
@@ -597,6 +575,8 @@ static int mc_cpu_starting(unsigned int cpu)
 {
 	enum ucode_state err = microcode_ops->apply_microcode(cpu);
 
+	pr_debug("%s: CPU%d, err: %d\n", __func__, cpu, err);
+
 	return err == UCODE_ERROR;
 }
 
@@ -619,7 +599,7 @@ static int mc_cpu_down_prep(unsigned int cpu)
 
 	/* Suspend is in progress, only remove the interface */
 	sysfs_remove_group(&dev->kobj, &mc_attr_group);
-	pr_debug("CPU%d removed\n", cpu);
+	pr_debug("%s: CPU%d\n", __func__, cpu);
 
 	return 0;
 }
@@ -650,7 +630,7 @@ static const struct attribute_group cpu_root_microcode_group = {
 	.attrs = cpu_root_microcode_attrs,
 };
 
-int __init microcode_init(void)
+static int __init microcode_init(void)
 {
 	struct cpuinfo_x86 *c = &boot_cpu_data;
 	int error;
@@ -668,12 +648,11 @@ int __init microcode_init(void)
 	if (!microcode_ops)
 		return -ENODEV;
 
-	microcode_pdev = platform_device_register_simple("microcode", -1,
-							NULL, 0);
+	microcode_pdev = platform_device_register_simple("microcode", -1, NULL, 0);
+	if (IS_ERR(microcode_pdev))
+		return PTR_ERR(microcode_pdev);
 
-	error = sysfs_create_group(&cpu_subsys.dev_root->kobj,
-				   &cpu_root_microcode_group);
-
+	error = sysfs_create_group(&cpu_subsys.dev_root->kobj, &cpu_root_microcode_group);
 	if (error) {
 		pr_err("Error creating microcode group!\n");
 		goto out_pdev;

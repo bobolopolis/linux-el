@@ -61,7 +61,7 @@ static u8 amd_ucode_patch[MAX_NUMNODES][PATCH_MAX_SIZE];
 
 /*
  * Microcode patch container file is prepended to the initrd in cpio
- * format. See Documentation/x86/microcode.txt
+ * format. See Documentation/x86/microcode.rst
  */
 static const char
 ucode_path[] __maybe_unused = "kernel/x86/microcode/AuthenticAMD.bin";
@@ -217,7 +217,6 @@ static unsigned int __verify_patch_size(u8 family, u32 sh_psize, size_t buf_size
 	default:
 		WARN(1, "%s: WTF family: 0x%x\n", __func__, family);
 		return 0;
-		break;
 	}
 
 	if (sh_psize > min_t(u32, buf_size, max_size))
@@ -333,8 +332,9 @@ static size_t parse_container(u8 *ucode, size_t size, struct cont_desc *desc)
 		ret = verify_patch(x86_family(desc->cpuid_1_eax), buf, size, &patch_size, true);
 		if (ret < 0) {
 			/*
-			 * Patch verification failed, skip to the next
-			 * container, if there's one:
+			 * Patch verification failed, skip to the next container, if
+			 * there is one. Before exit, check whether that container has
+			 * found a patch already. If so, use it.
 			 */
 			goto out;
 		} else if (ret > 0) {
@@ -353,6 +353,7 @@ skip:
 		size -= patch_size + SECTION_HDR_SIZE;
 	}
 
+out:
 	/*
 	 * If we have found a patch (desc->mc), it means we're looking at the
 	 * container which has a patch for this CPU so return 0 to mean, @ucode
@@ -367,7 +368,6 @@ skip:
 		return 0;
 	}
 
-out:
 	return orig_size - size;
 }
 
@@ -464,17 +464,23 @@ static bool early_apply_microcode(u32 cpuid_1_eax, void *ucode, size_t size, boo
 
 static bool get_builtin_microcode(struct cpio_data *cp, unsigned int family)
 {
-#ifdef CONFIG_X86_64
 	char fw_name[36] = "amd-ucode/microcode_amd.bin";
+	struct firmware fw;
+
+	if (IS_ENABLED(CONFIG_X86_32))
+		return false;
 
 	if (family >= 0x15)
 		snprintf(fw_name, sizeof(fw_name),
 			 "amd-ucode/microcode_amd_fam%.2xh.bin", family);
 
-	return get_builtin_firmware(cp, fw_name);
-#else
+	if (firmware_request_builtin(&fw, fw_name)) {
+		cp->size = fw.size;
+		cp->data = (void *)fw.data;
+		return true;
+	}
+
 	return false;
-#endif
 }
 
 static void find_blobs_in_containers(unsigned int cpuid_1_eax, struct cpio_data *ret)
@@ -699,7 +705,7 @@ static enum ucode_state apply_microcode_amd(int cpu)
 	rdmsr(MSR_AMD64_PATCH_LEVEL, rev, dummy);
 
 	/* need to apply patch? */
-	if (rev > mc_amd->hdr.patch_id) {
+	if (rev >= mc_amd->hdr.patch_id) {
 		ret = UCODE_OK;
 		goto out;
 	}
